@@ -2,6 +2,7 @@
 
 echo "This script is only a guide on minikube commands"
 
+# general commands applicable to multiple kinds of resources
 echo "***GENERAL COMMANDS***"
 
 echo "minikube start"
@@ -28,6 +29,7 @@ echo "  Get all available resources in the cluster"
 echo "kubectl apply -f <file-name>"
 echo "  Apply changes to an yaml file to the resources created by the file"
 
+# k8s pods
 echo "***POD COMMANDS***"
 
 echo "kubectl get pods"
@@ -45,6 +47,7 @@ echo "  Deletes the specified pods"
 echo "kubectl set image (-f <file-name>) container_name=image"
 echo "  Set a specific image to be used for the container"
 
+# k8s replicasets
 echo "***REPLICASET COMMANDS***"
 
 echo "kubectl get replicasets"
@@ -62,6 +65,7 @@ echo "  Deletes the specified replicasets"
 echo "kubectl replace -f <file-name>"
 echo "  Replaces the replicaset defined in an yaml file"
 
+# k8s deployments
 echo "***DEPLOYMENT COMMANDS***"
 
 echo "kubectl get deployments"
@@ -75,3 +79,9 @@ echo "  Lists the revision history of the deployment"
 
 echo "kubectl rollout undo deployment/<deployment-name>"
 echo "  Revert the deployment to the previous revision"
+
+# k8s services
+echo "***SERVICE COMMANDS***"
+
+echo "kubectl get services"
+echo " Retrieve a list of services"
