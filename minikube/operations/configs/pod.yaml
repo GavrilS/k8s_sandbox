@@ -7,5 +7,5 @@ metadata:
     tier: frontend
 spec:
   containers:
-    - name: nginx-container
+    - name: nginx
       image: nginx
