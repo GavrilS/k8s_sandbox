@@ -7,6 +7,10 @@ echo "minikube start"
 echo "  Starts a kubernetes cluster with the default driver - virtualbox"
 echo "*******************************************************"
 
+echo "minikube start --alsologtostderr -v=1"
+echo "  Starts a kubernetes cluster with logs for extra debugging information"
+echo "*******************************************************"
+
 echo "minikube start --driver=virtualbox"
 echo "  Starts a kubernetes cluster with explicitly specifying the driver to use - virtualbox"
 echo "*******************************************************"
