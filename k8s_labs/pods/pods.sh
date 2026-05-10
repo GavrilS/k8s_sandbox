@@ -8,6 +8,7 @@ echo "  kubectl run nginx --image=nginx"
 
 echo "Check details on a pod"
 echo "  kubectl describe pod <pod-name>"
+echo "  kubectl get pods -o wide"
 
 echo "What does the 'READY' column in the output of the 'kubectl get pods' command indicate"
 echo "Answer: Ready containers in a pod / Total containers in a pod"
