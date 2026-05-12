@@ -19,3 +19,12 @@ echo "  kubectl delete pod <pod-name>"
 echo "Create a pod with the redis image from a yaml file(which you created)"
 echo "  kubectl run redis --image=redis --dry-run=client -o yaml >> redis_pod.yaml"
 echo "  kubectl apply -f redis_pod.yaml"
+
+echo "Create a service that exposes a pod called httpd on port 80, where the service name is https"
+echo "  kubectl expose pod httpd --port=80 --name=httpd"
+
+echo "Give details and description of the pod resource"
+echo "  kubectl explain pod"
+
+echo "How can you give more information for a pod's containers"
+echo "  kubectl explain pod.spec.containers"

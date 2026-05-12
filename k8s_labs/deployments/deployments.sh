@@ -12,3 +12,6 @@ echo "  kubectl create deployment <deployment-name> --image=<image-name> --repli
 
 echo "Create a deployment from a file called 'deployment.yaml'"
 echo "  kubectl apply -f deployment.yaml"
+
+echo "Explore the replicas field of a pod"
+echo "  kubectl explain deployment.spec.replicas"
