@@ -1,0 +1,62 @@
+# PriorityClasses in k8s lab
+
+Q: What PriorityClasses are part of a default Kubernetes setup?
+
+A: Kubernetes ships with two PriorityClasses: system-cluster-critical and system-node-critical.
+---
+
+Q: What is the priority value assigned to the 2 default PriorityClasses?
+
+A: They are as follows:
+system-cluster-critical - 2000000000
+system-node-critical - 2000001000
+---
+
+Q: What is their preemptionPolicy?
+
+A: Both of them have the policy of 'PreemptLowerPriority'.
+---
+
+Q: Create a PriorityClass named 'high-priority', with a value of 100000, a preemption policy of 'PreemptLowerPriority' and not set it as a global default.
+
+A: This can be achieved with the following command:
+kubectl create priorityclass high-priority --value=100000 --global-default=false --preemption-policy=PreemptLowerPriority
+
+(To look for a sample config file for this PriorityClass check the file named 'high_priority_class.yaml')
+---
+
+Q: Create another PriorityClass named 'low-priority', with a value of 1000 and don't set it as a global default.
+
+A: Can be done with the following command:
+kubectl create priorityclass low-priority --value=1000 --global-default=false
+
+(To look for a sample config file for this PriorityClass check the file named 'low_priority_class.yaml')
+---
+
+Q: In the default namespace, create a pod named 'low-prio-pod' that runs an 'nginx' image and uses the 'low-priority' PriorityClass.
+
+A: Run the following command to create the pod definition file:
+kubectl run low-prio-pod --image=nginx --dry-run=client -o yaml >> low_priority_pod.yaml
+
+Then update the file adding the 'priorityClassName' attribute under the 'spec' section and setting its value to the correct priority class. Save the file and run the following command:
+
+kubect create -f low_priority_pod.yaml
+
+(To view the sample file configuration look at the file called 'low_priority_pod.yaml')
+---
+
+Q: Create another pod similiar to the previous one, but this one should be called 'high-prio-pod' and use the 'high-priority' PriorityClass.
+
+A: Create a similiar file to the one for the low priority pod and change the name of the pod and the priority class. Then create the pod with the following command:
+
+kubectl create -f high_priority_pod.yaml
+
+(For a sample of the file look at the file named 'high_priority_pod.yaml')
+---
+
+# You can compare the priority classes on both pods with the following command:
+
+kubectl get pods -o custom-columns="NAME:.metadata.name,PRIORITY:.spec.priorityClassName"
+
+---
+
