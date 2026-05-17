@@ -122,7 +122,14 @@ kubectl apply -f webhook-configuration.yaml
 
 ---
 
-# The pod-with-defaults.yaml file show a sample pod configuration. which when executed 
+# The webhook server checks the pod configuration and if there is no securityContext attaches
+a sample one setting the 'runAsNonRoot' to true and giving a default value for 'runAsUser'.
+
+If the pod definition includes a security context, where 'runAsNonRoot' is set as well as 
+the 'runAsUser', but the two have a conflict, the pod will be denied. If there is no conflict 
+it will be allowed.
+
+The pod-with-defaults.yaml file show a sample pod configuration. which when executed 
 will be updated by our admission webhook server and will have the following 'spec.securityContext' 
 added:
 
