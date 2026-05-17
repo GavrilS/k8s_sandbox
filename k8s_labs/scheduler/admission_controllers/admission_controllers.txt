@@ -73,3 +73,67 @@ ESC + :wq + ENTER
 After saving the file wait for the kube-apiserver to be restarted. It will happen 
 automatically after saving the file.
 ---
+
+# Validating and Mutating AdmissionControllers lab
+
+Q: What is the flow of invocation of admission controllers?
+
+A: First Mutating then Validating
+
+---
+
+Q: List the commands needed to create a 'webhook-demo' namespace and a TLS secret named 
+'webhook-server-tls' in it.
+
+A: To create a TLS secret we need to have a cert file and a private key. Both files follow 
+the format of the 'webhook.crt' file for the cert and the 'webhook.key' file for the key. 
+Run the below commands, substituting the correct file names for your situation:
+
+kubectl create namespace webhook-demo
+kubectl creat secret tls webhook-server-tls -n webhook-demo --cert=webhook.crt --key=webhook.key
+
+---
+
+Q: The webhook-deployment.yaml contains a sample deployment that will run the admission 
+webhook server. What command deploys it?
+
+A: Command:
+
+kubectl apply -f webhook-deployment.yaml
+
+---
+
+Q: The webhook-service.yaml file is a sample configuration for a service that exposes the 
+webhook server so that the admission controller can communicate with it. How do you deploy it?
+
+A: Command:
+
+kubectl apply -f webhook-service.yaml
+
+---
+
+Q: The webhook-configuration.yaml file contains a sample configuration for a 
+MutatingWebhookConfiguration(caBundle is fake). Upon applying this, which resources and 
+actions will it impact and how do you deploy it?
+
+A: It will impact the Pod resource with the CREATE operations. To deploy it, run:
+
+kubectl apply -f webhook-configuration.yaml
+
+---
+
+# The pod-with-defaults.yaml file show a sample pod configuration. which when executed 
+will be updated by our admission webhook server and will have the following 'spec.securityContext' 
+added:
+
+...
+spec
+    ...
+    securityContext:
+        runAsNonRoot: true
+        runAsUser: 1234
+    ...
+
+
+---
+
