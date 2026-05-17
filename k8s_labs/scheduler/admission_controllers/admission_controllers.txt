@@ -1,0 +1,75 @@
+# Admission Controllers lab
+
+# The ImagePolicyWebhook admission controller intercepts pod creation requests and consults 
+an external webhook service to determine whether the container images specified in the pod 
+spec should be allowed or denied.
+
+For this to work you need to have a container image scanner API service already deployed.
+
+Let's assume you have such a service which is deployed with the HTTPS endpoint:
+https://test-container-image-service-webhook.default.svc:1111/image_policy
+---
+
+# The following files are part of this lab:
+1. 'admission-configuration.yaml' -> this contains an AdmissionConfiguration resource declaration
+2. 'image-policy.conf' -> image policy configuration file
+3. 'kubeconf.yaml' -> a config declaration for calling an API server to validate the pod image 
+before deploying the pod
+4. 'webhook.key' -> the key for the webhook
+5. 'webhook.crt' -> the cert for the webhook
+6. 'kube-apiserver.yaml' -> a sample kube-apiserver config file
+---
+
+# In the 'ImagePolicyWebhook' configuration, the 'defaultAllow' field is currently set to 
+'true'. This means if the image verificaiton service endpoint is unavailable, the pod creation 
+is allowed by default.
+To reject pods, whoose images are not verified, change the value for the above field to 'false'.
+
+---
+
+# The kubeconf.yaml file contains a placeholder under the 'clusters.[].cluster.server' 
+fields. To make it work, we need to pass the correct server endpoint for our service. In 
+our case that would be the url above: 'https://test-container-image-service-webhook.default.svc:1111/image_policy'.
+
+---
+
+# To reconfigure the kube-apiserver to use our 'ImageAdmissionPolicy' admission pluggin, we 
+need to do the following:
+
+1. Open the kube-apiserver config file(usually /etc/kubernetes/manifests/kube-apiserver.yaml):
+
+vi /etc/kubernetes/manifests/kube-apiserver.yaml
+
+2. Update the admission pluggins line(in our kube-apiserver.yaml sample file that's line 19)
+to look like this:
+
+- --enable-admission-plugins=NodeRestriction,ImagePolicyWebhook
+
+3. Add the admission control config file flag under the command section:
+
+- --admission-control-config-file=/etc/kubernetes/imgvalidation/admission-configuration.yaml
+
+The path to admission file should match the actual path of your file. In our case we assume 
+it is in a directory called /etc/kubernetes/imgvalidation.
+
+4. Add the volume to the 'volumes' seciton:
+
+- name: imgvalidation
+    hostPath:
+    path: /etc/kubernetes/imgvalidation
+    type: Directory
+
+Here again we are using the same path.
+
+5. Add the volume to volumeMounts:
+
+- name: imgvalidation
+    mountPath: /etc/kubernetes/imgvalidation
+    readOnly: true
+
+6. Save the file:
+ESC + :wq + ENTER
+
+After saving the file wait for the kube-apiserver to be restarted. It will happen 
+automatically after saving the file.
+---
