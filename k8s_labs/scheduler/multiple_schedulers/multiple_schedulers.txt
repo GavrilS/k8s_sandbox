@@ -1,0 +1,60 @@
+# Multiple scheduler lab questions and answers
+
+Q: What is the name of the POD that deploys the default kubernetes scheduler in this 
+environment?
+
+A: There are 2 ways you can check this:
+    1. You can look at the location where the static pod manifest files (usually /etc/kubernetes/manifests) 
+are located and review them to identify the scheduler if it's not apparent by the name. 
+
+    2. You can run the command:
+
+kubectl get pods -A
+
+The scheduler pod is deployed as a static pod so it should have the name of the node appended 
+as a suffix. Usually the pod will be run on the controlplane node and it will be named 
+descriptively, like - 'kube-scheduler-controlplane'. You can use the describe command to 
+verify it is the correct one.
+
+---
+
+Q: What is the image used to deploy the kubernetes scheduler?
+
+A: Run the describe command on the pod and verify the image(if the name of the scheduler 
+pod is 'kube-scheduler-controlplane', and it is running in the 'kube-system' namespace,
+which is the default namespace for core components, the command will look like that):
+
+kubectl describe pod kube-scheduler-controlplane -n kube-system
+
+---
+
+# The files 'scheduler_service_account.yaml' and 'scheduler_clusterrolebinding.yaml' provide 
+a sample for creating a service account and cluster role binding for a scheduler.
+
+---
+
+Q: Create a scheduler configmap.
+
+A: A sample configmap yaml file called 'scheduler_configmap.yaml' is what we will use. Run 
+the command:
+
+kubectl create scheduler_configmap.yaml
+
+---
+
+Q: Create a custom scheduler.
+
+A: We will use the 'scheduler_pod.yaml' config file. Run the command:
+
+kubectl create -f scheduler_pod.yaml
+
+---
+
+Q: Create a nginx pod that will be scheduled by our custom scheduler created on the previous 
+step.
+
+A: We will use the 'nginx_pod.yaml' config file. Run the command:
+
+kubectl create -f nginx_pod.yaml
+
+---
