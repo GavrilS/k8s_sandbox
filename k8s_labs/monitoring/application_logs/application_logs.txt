@@ -1,0 +1,21 @@
+# Application Logs Lab
+
+---
+
+Q: A pod called 'webapp-1' is running an application and a user complains he/she cannot 
+log in to the application. What command can we use to look at the application logs?
+
+A: The command is:
+
+kubectl logs -f webapp-1
+
+---
+
+Q: A pod called 'webapp-2' is running an application and a user complains that he/she cannot 
+order an item in the application. How can we check the app logs to see what is going on?
+
+A: Run the following command:
+
+kubectl logs -f webapp-2
+
+---
