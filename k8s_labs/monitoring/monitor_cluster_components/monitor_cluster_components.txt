@@ -1,0 +1,28 @@
+# Monitor Cluster Components Lab
+
+---
+
+Q: Deploy the Metrics Server in your Kubernetes cluster by applying the latest release 
+components.yaml manifest.
+
+A: Run the following command:
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+---
+
+Q: Get the top node resource utilization.
+
+A: Run the following command:
+
+kubectl top node
+
+---
+
+Q: Get the top pod resource utilization.
+
+A: Run the following command:
+
+kubectl top pod
+
+---
