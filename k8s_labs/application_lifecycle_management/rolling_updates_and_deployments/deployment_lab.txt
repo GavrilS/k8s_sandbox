@@ -1,0 +1,74 @@
+# Rolling Updates and Deployments Lab Questions
+
+---
+
+Q: Inspect the pods and services in the default namespace.
+
+A: Commands to run:
+
+kubectl get pods
+kubectl get services
+
+---
+
+Q: Inspect the deployment in the default namespace to identify the number of Pods that have 
+been deployed by it.
+
+A: Run command and look at the 'Ready' section of the output:
+
+kubectl get deployments
+
+---
+
+Q: What container image is deployed by the application of the deployment?
+
+A: Run the below command and locate the image under the 'Pod Template > Containers' section:
+
+kubectl describe deployment <deployment-name>
+
+---
+
+Q: What is the deployment strategy in use?
+
+A: Run the below command and locate the strategy in the 'StrategyType' section:
+
+kubectl describe deployment <deployment-name>
+
+---
+
+Q: What would occur if you were to upgrade the application of a deployment that is using 
+'RollingUpdate' as the strategy type?
+
+A: Pods are upgraded few at a time.
+
+---
+
+Q: Update the image the deployment pods are running.
+
+A: Run the command:
+> kubectl edit deployment <deployment-name>
+and update the 'image' value in the 'containers' section.
+
+---
+
+Q: How many pods can be down simultaneously for an upgrade if the deployment strategy is 
+'RollingUpdate', the number of desired replicas is 4 and the 'RollingUpdateStrategy' is set 
+to 25% max unavailable?
+
+A: 25% of 4 is 1. Only one pod can be down at a time for the upgrade.
+
+---
+
+Q: Change the deployment strategy to 'Recreate'.
+
+A: Run the below command and update the value for 'StrategyType' to be 'Recreate':
+
+kubectl edit deployment <deployment-name>
+
+---
+
+Q: What will happen if you try to upgrade the application now?
+
+A: All pods will be taken down and deployed with the upgrade at the same time.
+
+---
