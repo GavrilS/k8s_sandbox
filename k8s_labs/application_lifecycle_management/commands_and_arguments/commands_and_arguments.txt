@@ -1,0 +1,56 @@
+# Commands and Arguments Lab
+
+---
+
+Q: Given a pod manifest file called 'ubuntu-sleeper.yaml', what is the command which will be 
+used to run the pod 'ubuntu-sleeper'.
+
+A: sleep 4800
+
+---
+
+Q: Create a pod with the ubuntu image to run a container to sleep for 5000 seconds.
+
+A: Using the pod manifest file called 'ubuntu-sleeper-2.yaml' we will run the following 
+command:
+
+> kubectl apply -f ubuntu-sleeper-2.yaml
+
+---
+
+Q: Create a pod with the ubuntu image to run a container to sleep for 1.2 seconds.
+
+A: Using the pod manifest file called 'ubuntu-sleeper-3.yaml' we will run the following 
+command:
+
+> kubectl apply -f ubuntu-sleeper-3.yaml
+
+---
+
+Q: Change the 'ubuntu-sleeper-3' pod command to sleep for 2 seconds.
+
+A: Update the command argument in the file 'ubuntu-sleeper-3.yaml' from "1200" to "2000" and 
+then run the following commands:
+
+> kubectl delete -f ubuntu-sleeper-3.yaml
+> kubectl apply -f ubuntu-sleeper-3.yaml
+
+---
+
+Q: Which command will be executed if a container is started from the image created by the 
+Dockerfile in the current directory?
+
+A: Command to be run:
+
+> python app.py
+
+---
+
+Q: Which command will be executed if a container is started from the image created by the 
+Dockerfile2 in the current directory if no arguments are passed from the command line?
+
+A: Command to be run:
+
+> python app.py --color green
+
+---
