@@ -1,0 +1,9 @@
+# Configmaps:
+
+# Create configmap with literals:
+> kubectl create configmap <confmap-name> --from-literal ENV_NAME=value --from-literal 
+ENV_NAME2=value
+
+# Get configmaps:
+> kubectl get configmaps
+> kubectl describe configmap <confmap-name>
