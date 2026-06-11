@@ -1,0 +1,31 @@
+# Manual Scaling Lab
+
+Q: What is the primary purpose of the 'kubectl scale' command?
+
+A: To adjust the number of pods in a deployment or a replicaset.
+
+---
+
+Q: Can the kubectl scale command be used to scale down a 'statefulset' in Kubernetes?
+
+A: Yes. Running:
+    > kubectl scale --help
+returns the following:
+    'Set a new size for a deployment, replica set, replication controller, or stateful set.'
+
+---
+
+Q: Manually scale the deployment named 'flask-web-app' to have 3 replicas.
+
+A: Run the following:
+> kubectl scale deployment flask-web-app --replicas=3
+
+---
+
+Q: If you try to scale a deployment to a higher number of replicas, but the cluster doesn't 
+have resources to create all the replicas what will happen?
+
+A: The command will succeed and k8s will create as many replicas as the available resources 
+on the cluster allow. The deploymen will be left in a pending state.
+
+---
