@@ -1,0 +1,5 @@
+# Lab on init containers
+
+# Example of pod with an init container - red_pod.yaml
+
+# Fix an issue with the orange pod init container - orange_pod.yaml
