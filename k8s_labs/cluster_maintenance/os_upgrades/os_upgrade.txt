@@ -1,0 +1,56 @@
+# OS Upgrade Lab
+
+Q: Check how many nodes are in the cluster.
+
+A: Run:
+
+> kubectl get nodes
+
+---
+
+Q: How many applications(deployments) are hosted on the system?
+
+A: Run:
+
+> kubectl get deployments
+
+---
+
+Q: Check which nodes are the applications hosted on?
+
+A: Run:
+
+> kubectl get pods -o wide --all-namespaces
+
+---
+
+Q: We need to take node01 out for maintenance. Empty the node of all applications and mark 
+it unschedulable.
+
+A: Run:
+
+> kubectl drain <node-name>
+
+If the command fails due to an error like this: 'cannot delete DaemonSet-managed Pods 
+(use --ignore-daemonsets to ignore)', use the following command:
+
+> kubectl drain <node-name> --ignore-daemonsets
+
+---
+
+Q: After the maintenance tasks have been completed, update the node to be schedulable 
+again.
+
+A: Run:
+
+> kubectl uncordon <node-name>
+
+---
+
+Q: Make a node unschedulable, but don't delete pods that are already present.
+
+A: Run:
+
+> kubectl cordon <node-name>
+
+---
