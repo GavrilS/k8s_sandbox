@@ -77,3 +77,24 @@ A: Run the following command:
 > kubectl describe vpa <deployment-name>
 
 ---
+==============================================
+
+# VPA cpu optimization lab
+
+---
+Monitoring Pod Resource Usage
+To check the current resource usage (CPU and memory) of all running pods in your Kubernetes 
+cluster, use the 'kubectl top pod' command. This command retrieves and displays resource 
+metrics directly from the cluster's resource metrics API. It is particularly useful for 
+tracking how efficiently your workloads are consuming cluster resources.
+
+> kubectl top pod
+
+---
+There is a sample 'VerticalPodAutoscaler' configuration in './vpa_resources/vpa_cpu.yaml'. 
+Once this is deployed to the kubernetes cluster we can check the cpu consumption with the 
+following command:
+
+> kubectl get vpa
+
+---
