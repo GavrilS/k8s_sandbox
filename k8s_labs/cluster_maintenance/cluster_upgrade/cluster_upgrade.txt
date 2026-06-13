@@ -1,0 +1,116 @@
+# Cluster Upgrade Lab
+
+---
+
+Q: Check the current version of the cluster.
+
+A: Run:
+
+> kubectl get nodes -o wide
+
+and check the 'VERSION' column.
+
+---
+
+Q: How many nodes can host workloads in the cluster?
+
+A: Check the nodes' taints and the application pods tolerations. Run:
+
+> kubectl describe node <node-name>
+
+and look for the taints on the node. Then run:
+
+> kubectl describe pod <pod-name>
+
+and check the pod tolerations.
+
+---
+
+Q: How many applications are running in the cluster?
+
+A: Run:
+
+> kubectl get deployments --all-namespace
+
+or run:
+
+> kubectl get pods --all-namespace
+
+---
+
+Q: What nodes are the application pods hosted on?
+
+A: Run:
+
+> kubectl get pods -o wide
+
+and check the 'NODE' column.
+
+---
+
+Q: Using the 'kubeadm' tool, what command can help you identify the latest available version 
+you can upgrade to with the tool version you have installed?
+
+A: Command:
+
+> kubeadm upgrade plan
+
+---
+
+Q: Let us mark the controlplane node 'unschedulable' and drain it.
+
+A: Run:
+
+> kubectl drain controlplane --ignore-daemonsets
+
+---
+
+Q: Upgrade the controlplane components to exact version '1.35.0' for Debian.
+
+A: Run the following commands to update the node:
+
+1. Upgrade kubeadm:
+> echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+> sudo apt-get update
+
+> sudo apt update
+> sudo apt-cache madison kubeadm
+
+> sudo apt-mark unhold kubeadm && \
+sudo apt-get update && sudo apt-get install -y kubeadm='1.35.0-1.1' && \
+sudo apt-mark hold kubeadm
+
+2. Verify that the download works and has the expected version:
+> kubeadm version
+
+3. Verify the upgrade plan:
+> sudo kubeadm upgrade plan
+
+4. Choose a version to upgrade to, and run the appropriate command. 
+> sudo kubeadm upgrade apply v1.35.0
+
+* Drain the node:
+
+> kubectl drain controlplane --ignore-daemonsets
+
+* Upgrade kubelet and kubectl
+
+1. Upgrade the kubelet and kubectl:
+> sudo apt-mark unhold kubelet kubectl && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.35.0-1.1' kubectl='1.35.0-1.1' && \
+sudo apt-mark hold kubelet kubectl
+
+2. Restart the kubelet:
+> sudo systemctl daemon-reload
+> sudo systemctl restart kubelet
+
+Uncordon the node:
+> kubectl uncordon controlplane
+
+* Upgrading worker nodes
+
+1. Drain the node
+> kubectl drain <node-name>
+
+
+---
