@@ -110,7 +110,29 @@ Uncordon the node:
 * Upgrading worker nodes
 
 1. Drain the node
-> kubectl drain <node-name>
+> kubectl drain <node-name> --ignore-daemonsets
 
+2. ssh into the worker node:
+> ssh <node-name>
 
+3. Follow the '1. Upgrade kubeadm' step for the controlplane node above
+
+4. Run:
+> sudo kubeadm upgrade node
+
+5. Upgrade kubelete and kubectl:
+
+> sudo apt-mark unhold kubelet kubectl && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.35.0-1.1' kubectl='1.35.0-1.1' && \
+sudo apt-mark hold kubelet kubectl
+
+> sudo systemctl daemon-reload
+> sudo systemctl restart kubelet
+
+6. Exit the worker node and run the uncordon node command from the controlplane
+> exit
+> kubectl uncordon <node-name>
+
+7. Check the version:
+> kubectl get nodes -o wide
 ---
