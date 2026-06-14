@@ -1,0 +1,71 @@
+# Backup and Restore Methods Lab
+
+---
+
+Q: How many deployments(applications) exist in the system?
+
+A: Run:
+
+> kubectl get deployments --all-namespaces
+
+---
+
+Q: What is the version of the ETCD running on the cluster?
+
+A: Run:
+
+> kubectl describe pod -n kube-system etcd-controlplane
+
+You can check the image version to figure out what is the ETCD version.
+---
+
+Q: At what address can you reach the ETCD cluster from the controlplane node?
+
+A: With the describe pod command you can check the 'etcd' container configuration. Under 
+the 'command' section locate '--listen-client-urls=' and you can see the address there.
+
+---
+
+Q: Where is the ETCD server certificate file located?
+
+A: Again in the output of the describe pod command, locate the 'etcd' container and find 
+the command flag called '--cert-file='. This will tell you where the certificate file is 
+located.
+
+---
+
+Q: Where is the ETCD CA Certificate file located?
+
+A: Again in the output of the describe pod command, locate the 'etcd' container and find 
+the command flag called '--trusted-ca-file='. This will tell you where the certificate file is 
+located.
+
+---
+
+Q: Take a snapshot of the ETCD database using the built-in snapshot functionality. Store 
+the backup file at location '/opt/snapshot-pre-boot.db'.
+
+A: Use the 'etcdctl' tool to take the snapshot:
+
+> etcdctl snapshot save /opt/snapshot-pre-boot.db
+
+---
+
+Q: There is an issue with our deployments. Let's restore the state from the backup.
+
+A: Run the following commands:
+
+1. Stop the kube-apiserver service:
+> systemctl stop kube-apiserver
+
+2. Restore state from snapshot:
+> etcdctl \
+    snapshot restore /opt/snapshot-pre-boot.db \
+    --data-dir=/var/lib/etcd-from-backup
+
+3. Reload the daemon and restart the etcd service:
+> systemctl daemon-reload
+> systemctl restart etcd
+> systemctl start kube-apiserver
+
+---
