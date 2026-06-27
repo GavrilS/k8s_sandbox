@@ -1,0 +1,41 @@
+# View Certificate Details Lab
+---
+
+Q: Identify the certificate file used for the 'kube-apiserver'.
+
+A: Run the following command:
+
+> cat /etc/kubernetes/manifests/kube-apiserver.yaml
+
+and locate the value for the '--tls-cert-file' option.
+
+---
+
+Q: Identify the Certificate file used to authenticate kube-apiserver as a client to 
+ETCD Server.
+
+A: From the above command locate the value for the '--etcd-certfile' option.
+
+---
+
+Q: Identify the key used to authenticate 'kube-apiserver' to the 'kubelet' server.
+
+A: From the above command locate the value for the '--kubelet-client-key' option.
+
+---
+
+Q: Identify the ETCD Server Certificate used to host ETCD server.
+
+A: Run the command:
+
+> cat /etc/kubernetes/manifests/etcd.yaml
+
+and locate the value for the '--cert-file' option.
+
+---
+
+Q: Identify the ETCD Server CA Root Certificate used to serve ETCD Server.
+
+A: From the above command locate the value for the '--trusted-ca-file' option.
+
+---
