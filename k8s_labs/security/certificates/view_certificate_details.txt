@@ -7,20 +7,26 @@ A: Run the following command:
 
 > cat /etc/kubernetes/manifests/kube-apiserver.yaml
 
-and locate the value for the '--tls-cert-file' option.
+and locate the value for the '--tls-cert-file' option:
+
+--tls-cert-file=/etc/kubernetes/pki/apiserver.crt
 
 ---
 
 Q: Identify the Certificate file used to authenticate kube-apiserver as a client to 
 ETCD Server.
 
-A: From the above command locate the value for the '--etcd-certfile' option.
+A: From the above command locate the value for the '--etcd-certfile' option:
+
+--etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
 
 ---
 
 Q: Identify the key used to authenticate 'kube-apiserver' to the 'kubelet' server.
 
-A: From the above command locate the value for the '--kubelet-client-key' option.
+A: From the above command locate the value for the '--kubelet-client-key' option:
+
+--kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
 
 ---
 
@@ -30,12 +36,117 @@ A: Run the command:
 
 > cat /etc/kubernetes/manifests/etcd.yaml
 
-and locate the value for the '--cert-file' option.
+and locate the value for the '--cert-file' option:
+
+--cert-file=/etc/kubernetes/pki/etcd/server.crt
 
 ---
 
 Q: Identify the ETCD Server CA Root Certificate used to serve ETCD Server.
 
-A: From the above command locate the value for the '--trusted-ca-file' option.
+A: From the above command locate the value for the '--trusted-ca-file' option:
+
+--trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+
+---
+
+Q: What is the Common Name (CN) configured on the Kube API Server Certificate?
+
+A: Run the following command:
+
+openssl x509 -in file-path.crt -text -noout
+
+change 'file-path.crt' with the actual file path to the crt file. Example:
+
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+
+There would be a line like this:
+
+Subject: CN = kube-apiserver
+
+---
+
+Q: What is the name of the CA who issued the Kube API Server Certificate?
+
+A: With the output of the above command there would be a line like this:
+
+Issuer: CN = kubernetes
+
+---
+
+Q: What are the alternate names configured on the Kube API Server Certificate?
+
+A: From the above command, locate this line:
+
+X509v3 Subject Alternative Name:
+
+---
+
+Q: What is the Common Name (CN) configured on the ETCD Server certificate?
+
+A: Run the same command for the ETCD server certificate:
+
+openssl x509 -in /etc/kubernetes/pki/etcd/server.crt -text -noout
+
+Locate the line listing the subject CN:
+
+Subject: CN = controlplane
+
+---
+
+Q: How long, from the issued date, is the Kube-API Server Certificate valid for?
+
+A: Locate this line in the openssl x509 command for the kube-apiserver cert file:
+
+Validity
+    Not Before: Jun 28 14:27:31 2026 GMT
+    Not After : Jun 28 14:32:31 2027 GMT
+
+In this case it will be 1 year.
+
+---
+
+Q: How long, from the issued date, is the Root CA Certificate valid for?
+
+A: Run this command(change the file name as needed if this is not the correct path for 
+your root cert file):
+
+openssl x509 -in /etc/kubernetes/pki/ca.crt -text -noout
+
+Locate the Validity line and calculate:
+
+Validity
+    Not Before: Jun 28 14:27:31 2026 GMT
+    Not After : Jun 25 14:32:31 2036 GMT
+
+In this case it is 10 years.
+
+---
+
+Q: Someone recently modified the /etc/kubernetes/manifests/etcd.yaml file and kubectl is 
+not responding. Check the etcd container logs to see what is happening. (Hint: you cannot 
+use the 'kubectl' tool.)
+
+A: Since we cannot use 'kubectl' we will use 'crictl'. First we need to get the container id. 
+Run the following command:
+
+> crictl ps -a --name etcd
+
+Then grab the 'container-id' and run the following command:
+
+> crictl logs <container-id>
+
+Look at the logs to figure out what is happening.
+
+---
+
+Q: The kube-api server stopped again! Check it out. Inspect the kube-api server logs and 
+identify the root cause and fix the issue.
+
+A: Same approach as for the previous issue. Check the kube-apiserver container logs and 
+identify the issue.
+
+> crictl ps -a
+> crictl logs <container-id>
 
 ---
