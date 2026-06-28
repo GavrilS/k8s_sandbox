@@ -1,0 +1,89 @@
+# Certificates API Lab
+---
+
+Q: Create a certificate for a new team member called akshay.
+
+A: Run the following commands:
+# Create a private key
+> openssl genrsa -out akshay.key 3072
+# Create an X.509 certificate signing request
+> openssl req -new -key akshay.key -out akshey.csr -subj "/CN=akshay"
+
+---
+
+Q: A new member akshay joined our team. He requires access to our cluster. The Certificate 
+Signing Request is at the skshay.csr file. Inspect it.
+
+A: Run the following command:
+
+> openssl req -in akshay.csr -text
+
+---
+
+Q: Create a CertificateSigningRequest object with the name akshay with the contents of the 
+akshay.csr file.
+
+A: The object file is ./yamls/akshay_cert_signing_req.yaml. For the 'spec.request' attribute 
+we need to put the base64 encoded content of the .csr file so first we run this command:
+
+> $(cat akshay.csr | base64 | tr -d '\n')
+
+Then we put the output of the command as a value of the 'spec.request' attribute and then we 
+create the object with:
+
+> kubectl apply -f akshay_cert_signing_req.yaml
+
+---
+
+Q: What is the Condition of the newly created Certificate Signing Request object?
+
+A: Check with the following command:
+
+> kubectl get certificatesigningrequests.certificates.k8s.io
+
+---
+
+Q: Approve the CSR Request.
+
+A: Run the following commands:
+# Get a list of CSRs
+> kubectl get csr
+# Approve the CSR
+> kubectl certificate approve akshay
+
+---
+
+Q: How many CSR requests are available on the cluster?
+
+A: Run:
+
+> kubectl get csr
+
+---
+
+Q: There is a request for a user called 'agent-smith'. Get the certificate details in yaml
+
+A: Run:
+
+> kubectl get csr/akshay -o yaml
+
+---
+
+Q: Reject the above request.
+
+A: Run:
+
+> kubectl certificate deny agent-smith
+
+---
+
+Q: Let's get rid of it. Delete the new CSR object.
+
+A: Run the following commands:
+
+# Get the CSR in a yaml file
+> kubectl get csr agent-smith -o yaml > agent-smith.yaml
+# Delete the CSR
+> kubectl delete -f agent-smith.yaml
+
+---

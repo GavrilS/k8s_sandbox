@@ -1,0 +1,10 @@
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: akshay
+spec:
+  request: $(cat akshay.csr | base64 | tr -d '\n') # This command will give you the base64 encoded cert request value, which you need to put here
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400 # One day
+  usages:
+  - client auth
