@@ -26,7 +26,7 @@ akshay.csr file.
 A: The object file is ./yamls/akshay_cert_signing_req.yaml. For the 'spec.request' attribute 
 we need to put the base64 encoded content of the .csr file so first we run this command:
 
-> $(cat akshay.csr | base64 | tr -d '\n')
+> cat akshay.csr | base64 | tr -d '\n'
 
 Then we put the output of the command as a value of the 'spec.request' attribute and then we 
 create the object with:
