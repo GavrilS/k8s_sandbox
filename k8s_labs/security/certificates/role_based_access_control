@@ -1,0 +1,83 @@
+# Role Based Access Controls Lab
+---
+
+Q: Inspect the environment and identify the authorization modes configured on the cluster.
+Check the kube-apiserver settings.
+
+A: The kube-apiserver setting can be viewed from the manifest file for the kibe-apiserver 
+pod. This is usually located under '/etc/kubernetes/manifests/kube-apiserver.yaml'. Locate 
+this line '--authorization-mode=Node,RBAC' under 'command'.
+
+---
+
+Q: How many roles exist in the default namespace?
+
+A: Run the command:
+
+> kubectl get roles
+
+---
+
+Q: How many roles exist in all namespaces together?
+
+A: Run:
+
+> kubectl get roles --all-namespaces
+
+---
+
+Q: Check what are the resources a role called 'kube-proxy' in the 'kube-system' namespace 
+giving access to.
+
+A: This can be done by describing the role:
+
+> kubectl describe role kube-proxy -n kube-system
+
+---
+
+Q: Which account is the kube-proxy role assigned to?
+
+A: Run:
+
+> kubectl get rolebindings.rbac.authorization.k8s.io --all-namespaces -o wide
+
+---
+
+Q: A user dev-user is created. User's details have been added to the kubeconfig file. Inspect the permissions granted to the user. Check if the user can list pods in the default namespace.
+
+A: To run a command as the dev-user you can do the following:
+
+> kubectl get pods --as dev-user
+
+---
+
+Q: Create the necessary roles and role bindings required for the dev-user to create, list and delete pods in the default namespace.
+
+A: You can view details on creating a role in the terminal by running:
+
+> kubectl create role --help
+
+Example:
+
+> kubectl create role developer --verb=list,create,delete --resource=pods
+
+or to just get the manifest object run:
+
+> kubectl create role developer --verb=list,create,delete --resource=pods --dry-run=client -o yaml > developer-role.yaml
+
+The role manifest file can be viewed in the yamls folder. The bind the role you can get 
+information for the command with this:
+
+> kubectl create rolebinding --help
+
+Example:
+
+> kubectl create rolebinding dev-user-binding --role=developer --user=dev-user
+
+Or you can run the command in dry mode and get the manifest for it with this:
+
+> kubectl create rolebinding dev-user-binding --role=developer --user=dev-user --dry-run=client -o yaml > dev-user-binding.yaml
+
+The manifest can be viewed in the yamls directory: /yamls/dev-user-binding.yaml.
+
+---
